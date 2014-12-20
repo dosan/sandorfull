@@ -3,7 +3,7 @@
 class App{
 	// home page user
 	
-	private $controller = 'post';
+	private $controller = 'home';
 	
 	// main action 	
 	private $method = 'index';
@@ -25,8 +25,6 @@ class App{
 			}else if (method_exists($this->controller, $url[1])) {
 				$this->method = $url[1];
 				unset($url[1]);
-			}else{
-				header('location: '.URL.'404.html');
 			}
 		}
 		$this->params = $url ? array_values($url) : [];

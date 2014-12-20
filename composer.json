@@ -20,7 +20,6 @@
 	],
 	"require": {
 		"sandor/sandorpack": "dev-master",
-		"monolog/monolog": "1.0.*",
-		"phalcon/devtools": "dev-master"
+		"swiftmailer/swiftmailer": "@stable"
 	}
 }

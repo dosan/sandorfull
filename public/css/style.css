@@ -275,3 +275,5 @@ h2 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+div.uploadItem a {position:relative;}
+div.uploadItem span:hover  {display: block;postion:absolute;bottom:-50px;cursor: pointer;}

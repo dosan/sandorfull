@@ -1,29 +1,146 @@
 <?php
-		use Sandorpack\HelloThere;
-/**
- * Class Home
- *
- * Please note:
- * Don't use the same name for class and method, as this might trigger an (unintended) __construct of the class.
- * This is really weird behaviour, but documented here: http://php.net/manual/en/language.oop5.decon.php
- *
- */
+
 class Home extends Controller
 {
-	/**
-	 * @var array $products data last added products
-	 */
-	public $products;
-
 	public function index()
 	{
-		// debug message to show where you are, just for the demo
-		// echo 'Message from Controller: You are in the controller '.__CLASS__.', using the method '.__METHOD__;
-		// load views. within the views we can echo out $songs and $amount_of_songs easily
-		$con = new HelloThere();
-		echo $con->world();
-		$prudcts_model = $this->model('ProductsModel');
-		$this->products = $prudcts_model->getLastProducts(10);
-		$this->loadViewTemplFolderTemplName('home','index.php');
+		require VIEWS_PATH.'layouts'.DS.'header.php';
+		require VIEWS_PATH.'home'.DS.'index.php';
+		require VIEWS_PATH.'layouts'.DS.'footer.php';
 	}
+	public function upload(){
+		try {
+			$objValid = new Validation();
+			$allowedExt = array('jpg', 'jpeg', 'gif', 'png', 'pdf', 'doc', 'docx');
+			if ($_FILES) {
+				if ($_FILES['ssdUploadFile']['error'] == 0) {
+					$extension = Helper::getExtension($_FILES['ssdUploadFile']['name']);
+					if (!in_array($extension, $allowedExt)) {
+						throw new Exception($objValid->_validation['file_extension']);
+					}
+					if ($_FILES['ssdUploadFile']['size'] > MAX_SIZE) {
+						throw new Exception($objValid->_validation['file_size'].' of'. Helper::bytesToSize(MAX_SIZE));
+					}
+					$fileName = date('YmdHis').'_'.mt_rand().'.'.$extension;
+					move_uploaded_file($_FILES['ssdUploadFile']['tmp_name'], UPLOAD_PATH.$fileName.'.'.FILE_EXT);
+					echo json_encode(array(
+						'error' => false,
+						'name' => $fileName,
+						'nameOriginal' => $_FILES['ssdUploadFile']['name'],
+						'size' => $_FILES['ssdUploadFile']['size'],
+						'sizeReadable' => Helper::bytesToSize($_FILES['ssdUploadFile']['size']),
+						'ext' => $extension
+					));
+				}else{
+					throw new Exception($objValid->_validation[$_FILES['ssdUploadFile']['error']]);
+				}
+			}else{
+				throw new Exception($objValid->_validation[$_FILES['file_not_found']]);
+			}
+		} catch (Exception $e) {
+			echo json_encode(array('error' => true, 'message' => $e->getMessage()));
+		}
+	}
+	
+
+	public function remove(){
+		try {
+			if (!empty($_POST['name'])) {
+				
+				$name = $_POST['name'];
+				$file = UPLOAD_PATH.$name.'.'.FILE_EXT;
+
+				if (is_file($file)) {
+					unlink($file);
+					echo json_encode(array('error' => false));
+				}else{
+					throw new Exception("File not found");
+				}
+			}else{
+				throw new Exception("Empty name string");
+			}
+
+		} catch (Exception $e) {
+			echo json_encode(array('error' => true, 'message' => $e->getMessage()));
+		}
+	}
+
+
+	public function send(){
+
+		try {
+			if (isset($_POST['fields'])) {
+				$expected = array(
+					'type', 'fullName', 'telephone', 'email', 'enquiry'
+				);
+				$required = array(
+					'type', 'fullName', 'telephone', 'email', 'enquiry'
+				);
+				$objForm = new Form();
+				$objValid = new Validation();
+				$objValid->_expected = $expected;
+				$objValid->_required = $required;
+				$objValid->_special = array('email' => 'email');
+
+				$array = $objForm->post2ArraySerialize($_POST['fields'], $expected);
+
+				$attachments = null;
+
+				if (!empty($_POST['files'])) {
+					$attachments = $_POST['files'];
+				}
+				if ($objValid->isValid($array)) {
+					
+					$objEmail = new Email();
+					$objEmail->setFrom($array['email'], $array['fullName']);
+					$objEmail->addReplyTo($array['email'], $array['fullName']);
+					$objEmail->setTo(EMAIL_TO, NAME_TO);
+					$objEmail->setSubject('Enquiry from our website');
+					$objEmail->setBody($objEmail->parse('1', $array));
+					$filesToRemove = array();
+
+					if (!empty($attachments)) {
+						foreach ($attachments as $item) {
+							rename(
+								UPLOAD_PATH.$item['newName'].'.'.FILE_EXT,
+								UPLOAD_PATH.$item['newName']
+								);
+							$objEmail->addAttachment(UPLOAD_PATH,$item['newName'], $item['oldName']);
+
+							$filesToRemove[] = UPLOAD_PATH.$item['newName'];
+						}
+					}
+					if ($objEmail->send($array['type'])) {
+						Helper::removeFiles($filesToRemove);
+						$message = '<h1>Thank you</h1>';
+						$message .= '<p>Your message has been sent successfully</p>';
+
+						echo json_encode(array('error' => false,  'message' => $message));
+					}else{
+						throw new Exception($objEmail->_error);
+					}
+				}else{
+					throw new Exception('validation error');
+				}
+			}else{
+				throw new Exception('Missing post');
+			}
+		} catch (Exception $e) {
+			$message = $e->getMessage();
+			if (is_array($message)) {
+				echo json_encode(array(
+					'error' => true,
+					'validation' => $message
+				));
+			}else{
+				echo json_encode(array(
+					'error' => true,
+					'message' => $message
+
+				));
+			}
+		}
+
+	}
+
 }

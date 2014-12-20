@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require 'app/libs/Session.php';
 require 'app/config/config.php';
 require 'app/libs/mainFunctions.php';

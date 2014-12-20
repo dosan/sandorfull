@@ -160,4 +160,4 @@ function updateOrderDatePayment(item_id){
 			}
 		}
 	});
-}
+};

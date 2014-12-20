@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Web store(sample)</title>
+	<title>Contoct secure</title>
 	<link rel="stylesheet" href="<?php echo CSS_PATH ?>style.css" type="text/css">
+	<link rel="stylesheet" href="<?php echo JS_PATH ?>uploadify/uploadify.css" type="text/css">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css">
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="<?php echo URL; ?>public/js/jquery-1.7.1.min.js"></script>
-	<script src="<?php echo URL; ?>public/js/application.js"></script>
+	<script type="text/javascript" src="<?php echo JS_PATH ?>jquery.js"></script>
+	<script type="text/javascript" src="<?php echo JS_PATH ?>core.js"></script>
+	<script type="text/javascript" src="<?php echo JS_PATH ?>formObject.js"></script>
+	<script type="text/javascript" src="<?php echo JS_PATH ?>uploadify/jquery.uploadify.min.js"></script>
+	<script type="text/javascript" src="<?php echo URL; ?>public/js/application.js"></script>
 	<script>
 	<?php
 		$jsMessages = json_encode($this->mess);
@@ -16,6 +18,7 @@
 	</script>
 </head>
 <body>
+	<div class="err"></div>
 	<div class="container">
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="container-fluid">
@@ -26,7 +29,6 @@
 						<?php if (Session::get('user_range') == 'admin'): ?>
 							<a class="navbar-brand" href="<?php echo URL ?>admin">Admin</a>
 						<?php endif ?>
-					</ul>
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav navbar-right">

@@ -573,4 +573,4 @@ function sendReply(id){
 			}
 		}
 	});
-}
+};
