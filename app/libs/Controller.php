@@ -110,8 +110,8 @@ class Controller
 		public function loadViewTemplFolderTemplName($templateFolder, $templateName, $withOutTempl = false){
 		if ($withOutTempl == false) {
 			$this->loadTemplate('header');
-			require "app/views/".$templateFolder."/".$templateName;
 			$this->loadTemplate('sidebar');
+			require "app/views/".$templateFolder."/".$templateName;
 			$this->loadTemplate('footer');
 		}else{
 			require "app/views/".$templateFolder."/".$templateName;

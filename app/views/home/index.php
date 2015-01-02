@@ -1,59 +1,57 @@
-<div id="wrapper">
-	<div id="formWrapper">
-		<form method="post" enctype="multipart/form-data" id="formContact">
-			<div class="row">
-				<div class="rowLeft type">
-					<label for="type">Email class: *</label>
-				</div>
-				<div class="rowRight fullName">
-					<label for="fullName">Full Name : *</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="rowLeft">
-					<select name="type" id="type" class="select required" title ="Please select the library">
-						<option value="">Select one</option>
-						<option value="1">PHPMailer</option>
-						<option value="2">SwiftMailer</option>
-						<option value="3">Zend Mail</option>
-					</select>
-				
-				</div>
-				<div class="rowRight">
-					<input type="text" name="fullName" id="fullName" class="field required" title="Please provide your full name">
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="rowLeft telephone">
-					<label for="telephone">Telephone: *</label>
-				</div>
-				<div class="rowRight email">
-					<label for="email">Email: *</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="rowLeft">
-					<input type="text" name="telephone" id="telephone" class="field required" title="Please provide your telephone number">
-				</div>
-				<div class="rowRight">
-					<input type="email" name="email" id="email" class="field required" title="Please provide your valid email address">
-				</div>
-			</div>
-
-			<div class="row enquiry">
-				<label for="enquiry">Enquiry: *</label>
-			</div>
-			<div class="row enquiry">
-				<textarea name="enquiry" id="enquiry" class="area required" title="Please provide your enquiry"></textarea>
-			</div>
-		</form>
-
-		<div class="row">
-			<div id="fileList"></div>
-			<div id="fileUpload"></div>
-			<a href="#" class="button buttonGreen submit" data-target="formContact">Submit enquiry</a>
-		</div>
-	
-	</div>
-</div>
+<h1>PDO Prepared Statement: Named Parameters</h1>
+<?php if (!empty($result['error'])) {
+    echo "<div class='warning'><p>{$result['error']}</p></div>";
+}else{ 
+    $row = $result['result']; 
+}
+?>
+<form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <fieldset>
+        <legend>Search for Cars</legend>
+    <p>
+        <label for="make">Make: </label>
+        <input type="text" name="make" id="make">
+        <label for="yearmade">Year (minimum): </label>
+        <select name="yearmade" id="yearmade">
+            <?php for ($y = 1970; $y <= 2010; $y+=5) {
+                echo "<option>$y</option>";
+            } ?>
+        </select>
+        <label for="price">Price (maximum): </label>
+        <select name="price" id="price">
+            <?php for ($p = 5000; $p <= 30000; $p+=5000) {
+                echo "<option value='$p'";
+                if ($p == 30000) {
+                    echo ' selected';
+                }
+                echo '>$' . number_format($p) . '</option>';
+            } ?>
+        </select>
+        <input type="submit" name="search" value="Search">
+    </p>
+    </fieldset>
+</form>
+<?php if (isset($_GET['search'])) {
+    if ($row) {
+    ?>
+<table>
+    <tr>
+        <th>Make</th>
+        <th>Year</th>
+        <th>Mileage</th>
+        <th>Price</th>
+        <th>Description</th>
+    </tr>
+    <?php foreach ($row as $key => $row) {?>
+    <tr>
+        <td><?php echo $row['make']; ?></td>
+        <td><?php echo $row['yearmade']; ?></td>
+        <td><?php echo number_format($row['mileage']); ?></td>
+        <td>$<?php echo number_format($row['price'], 2); ?></td>
+        <td><?php echo $row['description']; ?></td>
+    </tr>
+    <?php } ?>
+</table>
+<?php } else {
+        echo '<p>No results found.</p>';
+    } } ?>

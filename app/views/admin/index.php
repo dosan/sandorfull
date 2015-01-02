@@ -1,4 +1,4 @@
-
+<div class="col-md-9">
 	<div id='blockNewCategory'>
 		Новая категория:
 
@@ -15,3 +15,4 @@
 			<input class="btn btn-success" type="button" onclick="newCategory();" value="Дабавить категорию">
 
 	</div>
+</div>

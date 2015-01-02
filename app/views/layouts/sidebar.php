@@ -1,4 +1,5 @@
-<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+	<div class="col-md-3">
+		<p class="lead">Shop Name</p>
 		<div class="list-group">
 			<?php foreach ($this->shop_cats as $item): ?>
 				<a href='<?php echo URL."category/".$item['cat_id']; ?>'  class="list-group-item"><?php echo $item['cat_name'] ?></a>
@@ -29,21 +30,20 @@
 			</div>
 			<input id="submit_btn" class="btn btn-lg btn-primary btn-block" type="button" onClick="login();" value="Войти">
 			<a href="<?php echo URL ?>user/register" title="Регистрация" class="btn btn-lg btn-primary btn-block">Регистрация</a>
-      		<div class="cleaner"></div>
 		</div>
 	<?php endif ?>
 		<div id="userBox" class="hide">
 			<a href="#" id="userLink"></a><br>
 			<a href="<?php echo URL ?>user/logout" onClick="logout();">Log Out</a>
 		</div>
-<?php endif ?>
-	<div class="menuCaption">Basket</div>
-	<a href="<?php echo URL ?>basket" title="Перейти в корзину">В корзине</a>
-	<span id="basketcountProducts">
-	<?php if ($this->basketcountProducts > 0): 
-		echo $this->basketcountProducts;
-		else: ?>
-		Empty
-		<?php endif ?>
-	</span>
-</div><!-- /.row -->
+	<?php endif ?>
+		<div class="menuCaption">Basket</div>
+		<a href="<?php echo URL ?>basket" title="Перейти в корзину">В корзине</a>
+		<span id="basketcountProducts">
+		<?php if ($this->basketcountProducts > 0): 
+			echo $this->basketcountProducts;
+			else: ?>
+			Empty
+			<?php endif ?>
+		</span>
+	</div>

@@ -7,7 +7,7 @@ class Email{
 	private $_smtpPort = SMTP_PORT;
 	private $_smtpUsername = SMTP_USERNAME;
 	private $_smtpPassword = SMTP_PASSWORD;
-	private $_smtpEncrytion = SMTP_ENCRYPTION;
+	private $_smtpEncrytion = null;
 
 	private $_attachments = array();
 
@@ -17,7 +17,7 @@ class Email{
 
 	private $_subject = null;
 	private $_body = null;
-	private $_error = null;
+	public $_error = null;
 
 	public function send($class = 1){
 
@@ -92,7 +92,8 @@ class Email{
 
 	public function addAttachment($path = null, $file = null, $name = null){
 		if (!empty($path) && !empty($file) && is_file($path.DS.$file)) {
-			$name = !empty($name) ? strval($name) : strval($email);
+			$file = strip_tags($file);
+			$name = !empty($name) ? strval($name) : strval($file);
 			$this->_attachments[] = array('file' => $path.DS.$file, 'name' => $name);
 		}
 		return false;
@@ -101,16 +102,16 @@ class Email{
 	private function phpMailer(){
 		@require_once(LIBS.'PHPMailer'.DS.'class.phpmailer.php');
 		$objMail = new PHPMailer(true);
-		$objMail->isSMTP();
 		$objMail->HOST = $this->_smtpHost;
 		$objMail->SMTPAuth = $this->_smtpAuthentication;
-		$objMail->Port = $this->_smtpPort;
 		$objMail->Username = $this->_smtpUsername;
 		$objMail->Password = $this->_smtpPassword;
+		$objMail->Port = $this->_smtpPort;
 		if (!empty($this->_smtpEncrytion)) {
 			$objMail->SMTPSecure = $this->_smtpEncrytion;
 		}
-		$objMail->AddAddress($this->_to['email'], $this->_to['name']);
+		$objMail->From = $this->_from['email'];
+		$objMail->addAddress($this->_to['email'], $this->_to['name']);
 		$objMail->SetFrom($this->_from['email'], $this->_from['name']);
 		if (!empty($this->_replyTo)) {
 			foreach ($this->_replyTo as $rt) {
@@ -118,36 +119,36 @@ class Email{
 			}
 		}
 		$objMail->Subject = $this->_subject;
+		$objMail->Body = $this->_body;
 		$objMail->AltBody = strip_tags($this->_body);
 		$objMail->MsgHTML($this->_body);
+		$objMail->isHTML(true);
 		if (!empty($this->_attachments)) {
 			foreach ($this->_attachments as $attachment) {
-				$objMail->AddAttachment($attachment['file'], $attachment['name']);
+				$objMail->addAttachment($attachment['file'], $attachment['name']);
 			}
 		}
-		
-		return $objMail->send();
+		if(!$objMail->send()) {
+			$res = 'Message could not be sent.';
+			$res .= 'Mailer Error: ' . $objMail->ErrorInfo;
+		} else {
+			return true;
+		}
 	}
 
 	private function swiftMailer(){
-		@require_once(LIBS.'SwiftMailer'.DS.'swift_init.php');
-		$objTransport = Swift_SmtpTransport::newInstance();
-		$objTransport->setHost($this->_smtpHost);
-		$objTransport->setPort($this->_smtpPort);
+		require_once('swiftmailer'.DS.'lib'.DS.'swift_required.php');
+		$objTransport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
 		if (!empty($this->_smtpEncrytion)) {
 			$objTransport->setEncryption($this->_smtpEncrytion);
 		}
-		$objTransport->setUsername($this->_smtpUsername);
-		$objTransport->setPassword($this->_smtpPassword);
 		$objMailer = Swift_Mailer::newInstance($objTransport);
-		$objMessage = Swift_Message::newInstance($this->_subject);
+		$objMessage = Swift_Message::newInstance($this->_subject)
+		->setFrom(array($this->_from['email'] => $this->_from['name']))
+		->setTo(array($this->_to['email'] => $this->_to['name']))
+		->setBody($this->_body, 'text/html')
+		->addPart(strip_tags($this->_body), 'text/plain');
 
-		$objMessage->setBody($this->_body, 'text/html');	
-		$objMessage->addPart(strip_tags($this->_body), 'text/plain');
-
-		$objMessage->setFrom(array($this->_from['email'] => $this->_from['name']));
-
-		$objMessage->setTo(array($this->_to['email'] => $this->_to['name']));
 		if (!empty($this->_replyTo)) {
 			foreach ($this->_replyTo as $rt) {
 				$objMessage->setReplyTo(array($rt['email'] => $rt['name']));	
@@ -172,6 +173,7 @@ class Email{
 			}
 		}
 		$objMessage->setSubject($this->_subject);
+		$objMessage->setBody($this->_body);
 		$arrParts = array();
 		$attachmentsParts = array();
 		$partHtml = new Zend\Mime\Part($this->_body);
@@ -214,8 +216,7 @@ class Email{
 		$objMessage->setBody($bodyParts);
 
 		if ($objMessage->isValid()) {
-			$objTransport = new Zend\Mail\Transport\Smtp();
-
+			$objTransport = new Zend\Mail\Transport\Sendmail();
 			$options = array(
 				'name' => HOST_NAME,
 				'host' => SMTP_HOST,
@@ -230,8 +231,6 @@ class Email{
 			if (!empty($this->_smtpEncrytion)) {
 				$options['connection_config']['ssl'] = $this->_smtpEncrytion;
 			}
-
-			$objTransport->setOptions(new Zend\Mail\Transport\SmtpOptions($options));
 			$objTransport->send($objMessage);
 			return true;
 		}else{

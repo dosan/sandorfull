@@ -122,6 +122,6 @@ function d($value = null, $die = 1)
 function isInteger($input){
 	return(ctype_digit(strval($input)));
 }
-setReporting();
+//setReporting();
 removeMagicQuotes();
 unregisterGlobals();

@@ -17,7 +17,7 @@
 			<?php endif ?>
 		</div>
 	</div>
-		<div class="content_comment">
+	<div class="content_comment">
 		<?php if ($this->post_index['comments']): ?>
 		<?php $this->showComments($this->post_index['comments']) ?>
 		<?php endif ?>

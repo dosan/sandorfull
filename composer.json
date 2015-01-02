@@ -20,6 +20,6 @@
 	],
 	"require": {
 		"sandor/sandorpack": "dev-master",
-		"swiftmailer/swiftmailer": "@stable"
+		"swiftmailer/swiftmailer": "5.3.*@dev"
 	}
 }

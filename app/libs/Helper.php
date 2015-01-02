@@ -5,18 +5,6 @@ class Helper{
 	public static function isEmpty($value){
 		return empty($value) && !is_numeric($value) ? true : false;
 	}
-
-	public static function printArray($array = null){
-		if (!empty($array)) {
-			ob_start();
-			echo '<pre>';
-			print_r($array);
-			echo '</pre';
-			return ob_get_clean();
-		}else{
-			return 'Array is empty';
-		}
-	}
 	public static function getExtension($file = null){
 		if (!empty($file)) {
 			$file = explode('.', $file);
@@ -28,7 +16,7 @@ class Helper{
 	public static function getFilesByExtension($directory = null, $extensions = null){
 		$extensions = is_array($extensions) ? $extensions : array($extensions);
 		$extensions = "*." . implode(", *.", $extensions);
-		$files = glob($directory.DS."{$extensions}", GLOB_BRACE);
+		$files = glob($directory."$extensions", GLOB_BRACE);
 		return $files;
 	}
 	public static function bytesToSize($bytes = 0, $precision = 2){
@@ -57,15 +45,18 @@ class Helper{
 		if (!empty($array)) {
 			$out = array();
 			foreach ($array as $key => $value) {
-				$value / is_array($value) ? $value : array($array);
 				if(!empty($value)){
-					$out = array_merge($out, $value);
-				}else{
-					$out = $value;
+					$value = is_array($value) ? $value : array($array);
+					if (!empty($out)) {
+						$out = array_merge($out, $value);
+					}else{
+						$out = $value;
+					}
 				}
 			}
 			return $out;
 		}
+		return false;
 	}
 
 

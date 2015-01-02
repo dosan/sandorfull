@@ -5,7 +5,6 @@ define('DEVELOPMENT_ENVIRONMENT', true);
 define('URL', 'http://localhost/');
 define('HOST_NAME', 'localhost');
 // Папка сайта
-// Папка сайта
 defined("DS") || define('DS', DIRECTORY_SEPARATOR);
 defined("DOCUMENT_ROOT") || define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'].DS);
 defined("PASS_COM_LIB") || define('PASS_COM_LIB', "app".DS."libs".DS."password_compatibility_library.php");

@@ -9,10 +9,10 @@ class Form{
 				if (!empty($expected)) {
 					$expected = is_array($expected) ? $expected : array($expected);
 					if (in_array($key, $expected)) {
-						$out[$key] = $value;
+						$out[$key] = strip_tags($value);
 					}
 				}else{
-					$out[$key] = $value;
+					$out[$key] = strip_tags($value);
 				}
 			}
 			return $out;

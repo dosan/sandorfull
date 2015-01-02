@@ -9,10 +9,13 @@ class Product extends Controller
 	public $productInBasket = 0;
 	public function index()
 	{
-
 		$prudcts_model = $this->model('ProductsModel');
-		$this->products = $prudcts_model->getLastProducts(15);
-		$this->loadViewTemplFolderTemplName('home','index.php');
+		$products = $prudcts_model->getLastProducts(15);
+		require(VIEWS_PATH."layouts".DS."header.php");
+		require(VIEWS_PATH."layouts".DS."sidebar.php");
+		require(VIEWS_PATH."product".DS."index.php");
+		require(VIEWS_PATH."layouts".DS."footer.php");
+
 	}
 
 	/**
