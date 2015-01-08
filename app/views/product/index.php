@@ -1,18 +1,24 @@
 <div class="col-md-9">
+	<div class="row">
 	<?php if (isset($products)): ?>
-			<?php foreach ($products as $item): ?>
-				<div class="col-lg-4">
-					<a href="<?php echo URL."product/".$item['product_id']; ?>/">
-						<img width="190" height="108" class="img-circle" src="<?php echo URL."public/img/products/".$item['product_image'] ?>"  alt="" style="width: 140px; height: 140px;">
-					</a>
-					<h2><?php echo $item['product_name'] ?></h2>
-					<p class="price">Price: $<?php echo $item['product_price'] ?></p>
-					<p><a class="btn btn-default" href="<?php echo URL."product/".$item['product_id']; ?>/" role="button">View details &raquo;</a></p>
+		<?php foreach ($products as $item): ?>
+			<div class="col-sm-4 col-lg-4 col-md-4">
+				<div class="thumbnail">
+				<a href="<?php echo URL."product/".$item['product_id']; ?>/">
+					<img style="width:320px; height:150px;" src="<?php echo URL."public/img/products/".$item['product_image'] ?>" alt="Product">
+				</a>
+					<div class="caption">
+						<h4 class="pull-right"><?php echo $item['product_price'] ?>tg</h4>
+						<h4><a href="<?php echo URL."product/".$item['product_id']; ?>/"><?php echo $item['product_name'] ?></a></h4>
+						<p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+					</div>
 				</div>
-			<?php endforeach ?>
-		<?php else: ?>
-		<?php foreach ($child_cats as $item): ?>
-			<h2><a href="<?php echo URL ?>category/<?php echo $item['cat_id'] ?>/"><?php echo $item['cat_name'] ?></a></h2>
+			</div>
+		<?php endforeach ?>
+	<?php else: ?>
+	<?php foreach ($child_cats as $item): ?>
+		<h2><a href="<?php echo URL ?>category/<?php echo $item['cat_id'] ?>/"><?php echo $item['cat_name'] ?></a></h2>
 		<?php endforeach ?>
 	<?php endif ?>
+	</div>
 </div>

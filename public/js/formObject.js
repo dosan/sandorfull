@@ -86,7 +86,7 @@ var formObject = {
 			}
 		});
 	},
-	emailValidation :function(email){
+	emailValidation : function(email){
 		"use strict";
 		var emailPattern = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9]+([.\-]?[a-zA-Z0-9]+)?([\.]{1}[a-zA-Z]{2,4}){1,4}$/;
 		return emailPattern.test(email);

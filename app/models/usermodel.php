@@ -107,7 +107,7 @@ class UserModel{
 							VALUES('" . $user_name . "', '" . $user_password_hash . "',";
 						$sql .= " '" . $user_email . "',".time().");";
 					
-					$query_new_user_insert =  $this->db->query($sql);
+					$query_new_user_insert =  $this->db->exec($sql);
 
 					// if user has been added successfully
 					if ($query_new_user_insert) {

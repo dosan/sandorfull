@@ -24,16 +24,43 @@ class User extends Controller{
 	 * @return [array] [json encode]
 	 */
 	public function login(){
-		if (isset($_POST['user_name'])) {
-			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : null;
-			$user_password = isset($_POST['user_password']) ? $_POST['user_password'] : null;
-			$this->versionPhp() AND require PASS_COM_LIB;
-			$user_model = $this->model('UserModel');
-			$result = $user_model->loginUser($user_name, $user_password);
-			$this->message = $result;
-			echo json_encode($result);
-		}else{
-			header('location: '.URL.'404.html');
+		try {
+			if (!empty($_POST['fields'])) {
+				$expected = array(
+					'user_name', 'user_password'
+				);
+				$required = array(
+					'user_name', 'user_password'
+				);
+				$objForm = new Form();
+				$objValid = new Validation();
+
+				$array = $objForm->post2ArraySerialize($_POST['fields'], $expected);
+
+				if ($objValid->isValid($array)) {
+
+					$this->versionPhp() AND require PASS_COM_LIB;
+					$user_model = $this->model('UserModel');
+					$result = $user_model->loginUser($array['user_name'], $array['user_password']);
+					
+					if (!$result['success']) {
+						throw new Exception("Wrong password or name");
+					}else{
+						echo json_encode(array('error' => false));
+					}
+				}else{
+					throw new Exception($objValid->_errors);
+				}
+			}else{
+				throw new Exception("Error Processing Request");
+			}
+		} catch (Exception $e) {
+			$message = $e->getMessage();
+
+			echo json_encode(array(
+				'error' => true,
+				'message' => $message
+			));
 		}
 	}
 

@@ -1,4 +1,4 @@
-<div class="col-sm-8 blog-main">
+<div class="col-md-9">
 	<div class="jumbotron">
 	<h1><?php echo $this->product['product_name'] ?> </h1>
 	<p class="lead">

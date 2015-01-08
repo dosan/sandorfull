@@ -1,41 +1,3 @@
-
-function beforeSendFunction(){
-	setTimeout(function(){
-		$("#loading").attr('class', 'show');
-	},2000)
-
-}
-function onCompleteFunction(){
-	$("#loading").hide();
-}
-
- var current_slide = 0; // zero-based
- var slide_count = 3;
- var slide_size = 400;
-
- var Direction = {
-	LEFT: -1,
-	RIGHT: 1
- };
-
- /**
- * Переход к следующему слайду с помощью параметра direction (dx).
- */
- var nextSlide = function(dx) {
-	current_slide = (current_slide + slide_count + dx) % slide_count;
-
-	// Расчет нового значения для параметра "left" в CSS, а также анимация.
-	var left_offset = '-' + (current_slide * slide_size) + 'px';
-	$('.items').animate({'left': left_offset}, 300);
- };
-
- $('.right-button').click(nextSlide.bind(null, Direction.RIGHT));
- $('.left-button').click(nextSlide.bind(null, Direction.LEFT));
-
-
- $('.carousel').attr('class', 'show');
-
-	
 /**
  *  Функция добавления товара в корзину
  *  
@@ -43,7 +5,6 @@ function onCompleteFunction(){
  *  @return в случае успеха обновятся данные корзины на странице
  */
 function addToBasket(product_id){
-	console.log("js - addToBasket()");
 	$.ajax({
 		type: 'POST',
 		async: false,
@@ -66,7 +27,6 @@ function addToBasket(product_id){
  * @return в случае успеха обновятся данные корзины на странице
  */
 function removeFromBasket(product_id){
-	console.log("js - removeFromBasket");
 	$.ajax({
 		type: 'POST',
 		async: false,
@@ -110,51 +70,12 @@ function getData(obj_form){
 		  });
 		  return hData;
 };
-/**
- * Авторизация пользователя
- * 
- */
-function login(){
-	var user_name = $('#user_name').val();
-	var user_password = $('#user_password').val();
 
-	var postData = {user_name: user_name, 
-					user_password: user_password};
-	
-	$.ajax({
-		type: 'POST',
-		async: false,
-		url: "/user/loginjson",
-		data: postData,
-		dataType: 'json',
-		success: function(data){
-			if(data['success']){
-				$('#loginBox').attr('class', 'hide');
-
-				$('#userLink').attr('href', '/user/'); 
-				$('#userLink').html(data['user_name']);
-				$('#userBox').attr('class', 'show');
-
-				//> заполняем поля на странице заказа
-				$('#user_name').val(data['user_name']);
-				$('#user_phone').val(data['user_phone']);
-				$('#user_adress').val(data['user_adress']);
-				//<
-
-				$('#btnSaveOrder').attr('class', 'btn btn-success');
-				$('#registerBox').attr('class', 'hide');
-				
-			}else{
-				alert(data['message']);
-			}
-		}
-	}); 
-}
 /**
  * Регистрация нового пользователя
  * 
  */
-function registerNewUser(){
+function registerNewUserOrder(){
 	var postData = getData('#registerBox');
 	
 	$.ajax({
@@ -264,27 +185,50 @@ function showProducts(id){
  * Авторизация пользователя
  * 
  */
-function loginAd(){
-	var user_name = $('#input_user_name').val();
-	var user_password = $('#input_user_password').val();
-
-	var postData = {user_name: user_name, 
-					user_password: user_password};
-	
-	$.ajax({
-		type: 'POST',
-		async: false,
-		url: "/user/login",
-		data: postData,
-		dataType: 'json',
-		success: function(data){
-			if(data['success']){
+function loginAd(idForm){
+	var result;
+	var form = $('#' + idForm);
+	if (validateLoginForm(idForm)) {
+		var thisArray = form.serializeArray();
+		$.ajax({
+			type: 'POST',
+			async: false,
+			url: "/user/login",
+			data: {fields: thisArray},
+			dataType: 'json',
+			success: function(data){
+				if(!data['error']){
+					result = true;
+				}else{
+					result = data['message'];
+				}
+			}
+		}); 
+	}else{
+		result = 'Please provide your name and password';
+	}
+	switch(idForm){
+		case 'sidebarLogin':
+			if (result === true) {
+				document.location.reload(true);
+			}else{
+				alert(result);
+			}
+		break;
+		case 'loginForm':
+			if (result === true) {
 				document.location = '/';
 			}else{
-				alert(data['message']);
+				alert(result);
 			}
-		}
-	}); 
+		break;
+		case 'orderLoginForm':
+			if (result === true) {
+				document.location = '/';
+			}else{
+				alert(result);
+			}
+	}
 }
 
 /**
@@ -376,47 +320,41 @@ function changeLang() {
 	});
 }
 
-function validateLoginForm() {
-	var user_name = document.getElementById("input_user_name").value;
-	var user_password = document.getElementById("input_user_password").value;
+function validateLoginForm(id) {
+	var form = document.getElementsByTagName('form')[0];
+	var inputs = form.getElementsByTagName('input');
+	console.log(inputs);
+	var regUserName = /^[a-zA-Z0-9_]+$/;
 	var nameErr = [];
 	var passErr = [];
 	if (user_name == "" || user_name == null) {
 		nameErr.push(jsMessages['enter_your_name']);
+	}
+	if (!regUserName.exec(user_name)) {
+		nameErr.push(jsMessages['r_name_letters_num']);
 	}
 	if (user_password == "" || user_password == null) {
 		passErr.push(jsMessages['enter_your_password']);
 	}
 	if (nameErr.length > 0 || passErr.length > 0) {
 		if (nameErr.length > 0) {
-			reportErrors('errUserName', nameErr);
+			reportErrorsLogin('errUserName', nameErr);
 		}else{
-			hideShowedErr('errUserName');
+			hideErrMessage('errUserName');
 		}
 		if (passErr.length > 0) {
-			reportErrors('errUserPassword', passErr);
+			reportErrorsLogin('errUserPassword', passErr);
 		}else{
-			hideShowedErr('errUserPassword');
+			hideErrMessage('errUserPassword');
 		}
 		return false;
-	}
-	function checkLength(text, min, max){
-		min = min || 3;
-		max = max || 1000;
-		
-		if (text.length < min || text.length > max) {
-			return false;
-		}
+	}else{
 		return true;
 	}
-	function hideShowedErr(idErr){
-		document.getElementById(idErr).setAttribute('class', 'hide');
-	}
-	function reportErrors(idErr, err){
-		document.getElementById(idErr).innerHTML =  err;
-		document.getElementById(idErr).setAttribute('class', 'errmessage');
-	}
-	return loginAd();
+}
+function reportErrorsLogin(idErr, err){
+	document.getElementById(idErr).innerHTML =  err;
+	document.getElementById(idErr).setAttribute('class', 'errmessage');
 }
 
 function validateUpdateForm() {
@@ -505,29 +443,26 @@ function validateRegisterForm() {
 		if (nameErr.length > 0) {
 			reportErrors('errUserName', nameErr, 'errmessage');
 		}else{
-			hideShowedErr('errUserName');
+			hideErrMessage('errUserName');
 		}
 		if (emailErr.length > 0) {
 			reportErrors('errUserEmail', emailErr, 'errmessage');
 		}else{
-			hideShowedErr('errUserEmail');
+			hideErrMessage('errUserEmail');
 		}
 		if (passErr.length > 0) {
 			reportErrors('errUserPassword', passErr, 'errmessage');
 		}else{
-			hideShowedErr('errUserPassword');
+			hideErrMessage('errUserPassword');
 		}
 		if (passRepErr.length > 0) {
 			reportErrors('errUserPasswordNew', passRepErr, 'errmessage');
 		}else{
-			hideShowedErr('errUserPasswordNew');
+			hideErrMessage('errUserPasswordNew');
 		}
 		return false;
 	}
 	return registerNewUser();
-}
-function hideShowedErr(idErr){
-	document.getElementById(idErr).setAttribute('class', 'hide');
 }
 function reportErrors(idErr, err, classN){
 	document.getElementById(idErr).innerHTML =  err[0];
