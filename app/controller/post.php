@@ -70,7 +70,7 @@ class Post extends Controller{
 	{
 		//only admin have access to the function deletePost
 		if (Session::get('user_range') == 'admin') {
-			// if we have an id of a new that should be deleted
+			// id for delete
 			if (isset($post_id)) {
 				// load model, perform an action on the model
 				$model = $this->model('PostModel');

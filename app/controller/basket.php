@@ -85,7 +85,7 @@ class Basket extends Controller
 		}
 		// полученный массив покупаемых товаров помещаем в сессионную переменную
 
-		// получаем из массива $_POST количество покупаемых товаров
+		// получаем из массива $_GET количество покупаемых товаров
 		$itemsCnt = array();
 		foreach($products as $item){
 			// формируем ключ для массива POST
@@ -93,8 +93,7 @@ class Basket extends Controller
 			// создаем элемент массива количества покупаемого товара
 			// ключ массива - ID товара, значение массива - количество товара
 			// $itemsCnt[1] = 3;  товар с ID == 1 покупают 3 штуки
-			$itemsCnt[$item] = isset($_POST[$postVar]) ? $_POST[$postVar] : null;
-
+			$itemsCnt[$item] = isset($_GET[$postVar]) ? $_GET[$postVar] : null;
 		}
 
 		$product_model = $this->model('ProductsModel');

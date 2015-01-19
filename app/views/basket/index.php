@@ -3,7 +3,7 @@
 <?php if ($this->product == null): ?>
 	<h2>В корзине пусто</h2>
 <?php else: ?>
-<form action="<?php echo URL ?>basket/order/" method="POST">
+<form action="<?php echo URL ?>basket/order/" method="GET">
 	<div class="table-responsive">
 	<table class="table table-striped">
 		<tr>

@@ -167,6 +167,12 @@ h2 {
 	line-height: 150%;
 	font-size: 14px;
 }
+.conf {
+	color: green;
+	display: block;
+	line-height: 150%;
+	font-size: 14px;
+}
 label,.warning{
 	padding-bottom: 0.4em;
 	

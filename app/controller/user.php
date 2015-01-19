@@ -12,11 +12,9 @@ class User extends Controller{
 	{
 		require VIEWS_PATH.'layouts/header.php';
 		if (Session::get('user_login_status') != 1)
-		{
-			require VIEWS_PATH.'user/login.php';
-		}else{
-			require VIEWS_PATH.'user/index.php';
-		}
+		require VIEWS_PATH.'user/login.php';
+		else
+		require VIEWS_PATH.'user/index.php';
 		require VIEWS_PATH.'layouts/footer.php';
 	}
 	/**
@@ -56,7 +54,6 @@ class User extends Controller{
 			}
 		} catch (Exception $e) {
 			$message = $e->getMessage();
-
 			echo json_encode(array(
 				'error' => true,
 				'message' => $message
@@ -70,17 +67,40 @@ class User extends Controller{
 	 */
 	public function register()
 	{
-		$usermodel = $this->model('UserModel'); 
-		if (isset($_POST["user_name"]) and isset($_POST['user_email'])) {
-			$this->versionPhp() AND require PASS_COM_LIB;
-			$result = $usermodel->registerUser();
-			if (is_array($result)) {
-				echo json_encode($result);
+		try {
+			if (!empty($_POST['fields'])) {
+				$expected = array(
+					'user_name', 'user_email', 'user_password', 'user_password_repeat'
+				);
+				$required = array(
+					'user_name', 'user_email', 'user_password', 'user_password_repeat'
+				);
+				$objForm = new Form();
+				$objValid = new Validation();
+
+				$array = $objForm->post2ArraySerialize($_POST['fields'], $expected);
+				if ($objValid->isValid($array)) {
+					$usermodel = $this->model('UserModel');
+					$this->versionPhp() AND require PASS_COM_LIB;
+					$result = $usermodel->registerUser($array['user_name'], $array['user_email'], $array['user_password'], $array['user_password_repeat']);
+					if (is_array($result)) {
+						echo json_encode(array('error' => false));
+					}
+				}else{
+					throw new Exception($objValid->_errors);
+				}
+			}else{
+				require VIEWS_PATH.'layouts/header.php';
+				require VIEWS_PATH.'user/register.php';
+				require VIEWS_PATH.'layouts/footer.php';
 			}
-		}else{	
-			require VIEWS_PATH.'layouts/header.php';
-			require VIEWS_PATH.'user/register.php';
-			require VIEWS_PATH.'layouts/footer.php';
+		} catch (Exception $e) {
+			$message = $e->getMessage();
+
+			echo json_encode(array(
+				'error' => true,
+				'message' => $message
+			));
 		}
 	}
 	/**
@@ -133,10 +153,10 @@ class User extends Controller{
 				$result = $usermodel->updateUserData();
 				echo json_encode($result);
 			}else{	
-				header('location: '.URL.'404.html');
+				header('location: '.URL.'user');
 			}
 		}else{
-			header('location: '.URL.'404.html');
+			header('location: '.URL.'user');
 		}
 	}
 	/**

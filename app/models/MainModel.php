@@ -17,7 +17,8 @@ class MainModel
 	}
 	
 	function selectAll($table) {
-		$query = 'select * from `'.$table.'`';
+		$sql = 'SELECT * FROM `'.$table.'`';
+		$this->db->query($sql);
 		return $query;
 	}
 	

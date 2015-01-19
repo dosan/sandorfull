@@ -58,41 +58,41 @@ class UserModel{
 	 * new user registration
 	 * @return [string] [description]
 	 */
-	public function registerUser(){
-		if (empty($_POST['user_name'])) {
+	public function registerUser($user_name, $user_email, $user_password, $user_password_repeat){
+		if (empty($user_name)) {
 			$this->messages[] = "Empty Username";
-		} elseif (empty($_POST['user_password_new']) || empty($_POST['user_password_repeat'])) {
+		} elseif (empty($user_password) || empty($user_password_repeat)) {
 			$this->messages[] = "Empty Password";
-		} elseif ($_POST['user_password_new'] !== $_POST['user_password_repeat']) {
+		} elseif ($user_password !== $user_password_repeat) {
 			$this->messages[] = "Password and confirm password are not the same";
-		} elseif (strlen($_POST['user_password_new']) < 6) {
+		} elseif (strlen($user_password) < 6) {
 			$this->messages[] = "Password has a minimum length of 6 characters";
-		} elseif (strlen($_POST['user_name']) > 64 || strlen($_POST['user_name']) < 4) {
+		} elseif (strlen($user_name) > 64 || strlen($user_name) < 4) {
 			$this->messages[] = "Username cannot be shorter than 4 or longer than 64 characters";
-		} elseif (!preg_match('/^[a-z\d]{4,64}$/i', $_POST['user_name'])) {
+		} elseif (!preg_match('/^[a-z\d]{4,64}$/i', $user_name)) {
 			$this->messages[] = "Username does not fit the name scheme: only a-Z and numbers are allowed, 4 to 64 characters";
-		} elseif (empty($_POST['user_email'])) {
+		} elseif (empty($user_email)) {
 			$this->messages[] = "Email cannot be empty";
-		} elseif (strlen($_POST['user_email']) > 64) {
+		} elseif (strlen($user_email) > 64) {
 			$this->messages[] = "Email cannot be longer than 64 characters";
-		} elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
+		} elseif (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
 			$this->messages[] = "Your email address is not in a valid email format";
-		} elseif (!empty($_POST['user_name'])
-			&& strlen($_POST['user_name']) <= 64
-			&& strlen($_POST['user_name']) >= 4
-			&& preg_match('/^[a-z\d]{4,64}$/i', $_POST['user_name'])
-			&& !empty($_POST['user_email'])
-			&& strlen($_POST['user_email']) <= 64
-			&& filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)
-			&& !empty($_POST['user_password_new'])
-			&& !empty($_POST['user_password_repeat'])
-			&& ($_POST['user_password_new'] === $_POST['user_password_repeat'])
+		} elseif (!empty($user_name)
+			&& strlen($user_name) <= 64
+			&& strlen($user_name) >= 4
+			&& preg_match('/^[a-z\d]{4,64}$/i', $user_name)
+			&& !empty($user_email)
+			&& strlen($user_email) <= 64
+			&& filter_var($user_email, FILTER_VALIDATE_EMAIL)
+			&& !empty($user_password)
+			&& !empty($user_password_repeat)
+			&& ($user_password === $user_password_repeat)
 		) {
-				$user_password = trim($_POST['user_password_new']);
+				$user_password = trim($user_password);
 
 				$user_password_hash = password_hash($user_password, PASSWORD_DEFAULT);
-				$user_name = trim($_POST['user_name']);
-				$user_email = trim($_POST['user_email']);
+				$user_name = trim($user_name);
+				$user_email = trim($user_email);
 				
 				// check if user or email address already exists
 				$sql = "SELECT * FROM users WHERE user_name = '" . $user_name . "' OR user_email = '" . $user_email . "';";

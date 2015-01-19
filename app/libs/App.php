@@ -3,7 +3,7 @@
 class App{
 	// home page user
 	
-	private $controller = 'home';
+	private $controller = 'gallery';
 	
 	// main action 	
 	private $method = 'index';

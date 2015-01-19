@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="<?php echo CSS_PATH ?>core.css" type="text/css">
 	<link rel="stylesheet" href="<?php echo CSS_PATH ?>style.css" type="text/css">
 	<link rel="stylesheet" href="<?php echo JS_PATH ?>uploadify/uploadify.css" type="text/css">
+	<?php echo isset($hd_script) ? $hd_script : NULL ?>
 </head>
 <body>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
