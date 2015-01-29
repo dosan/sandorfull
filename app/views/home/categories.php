@@ -19,9 +19,9 @@
 	<table cellpadding="0" cellspacing="0" border="0" class="tbl_repeat">
 		<tr>
 			<th>Category name</th>
-			<th class="fifteen ta_r">Images</th>
-			<th class="ten ta_r">Remove</th>
-			<th class="ten ta_r">Edit</th>
+			<th class="ta_r">Images</th>
+			<th class="ta_r">Remove</th>
+			<th class="ta_r">Edit</th>
 		</tr>
 		<?php foreach ($categories as $key => $value): ?>
 		<tr>

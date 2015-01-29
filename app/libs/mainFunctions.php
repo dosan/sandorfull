@@ -1,6 +1,15 @@
 <?php
 
-//IMAGE MAGIC FUNCTION
+//IMAGE MAGIC FUNCTION 
+/**
+ * 
+ *	hosting should support function exec();
+ *  $from string path from
+ * $to path to
+ * $job case
+ * $new_w new image width 
+ * $new_h new image height 
+ */
 function convert_image($from, $to, $job, $new_w, $new_h = ''){
 	if (file_exists($from)) {
 		$convert_path = 'convert';

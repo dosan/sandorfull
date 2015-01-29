@@ -27,29 +27,33 @@
 <div class="dev br_ts">&nbsp;</div>
 <?php echo isset($confirmation) ? $confirmation : NULL ?>
 <form action="" name="update" method="post">
-	<ul id="ul_gal">
+	<ul id="ul_gal" class="col-md-9">
 		<?php foreach ($images as $key => $value): ?>
-		<?php if (is_file(UPLOAD_PATH_THUMB.$value['image'])): ?>
+		<?php if (is_file(UPLOAD_PATH.$value['image'])): ?>
 			<li>
 				<a class="zoom" rel="group" href="<?php echo URL.'uploads'.DS.$value['image'] ?>" title="<?php echo $value['caption'] ?>">
-					<img src="<?php echo URL.'uploads/'.$value['image'] ?>" alt="<?php  echo $value['caption'] ?>" <?php echo getSize(4, UPLOAD_PATH_THUMB.$value['image']); ?> />
+					<img src="<?php echo URL.'uploads/'.$value['image'] ?>" alt="<?php  echo $value['caption'] ?>" <?php echo is_file(UPLOAD_PATH_THUMB.$value['image']) ? getSize(4, UPLOAD_PATH_THUMB.$value['image']) : getSize(4, UPLOAD_PATH.$value['image']); ?> />
 				</a>
-				<label for="remove#<?php echo $value['id'] ?>">
-					<input type="checkbox" name="remove#<?php echo $value['id'] ?>" id="remove#<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>">
-					<span>R</span>
-				</label>
-				<label for="display_order#<?php echo $value['id'] ?>">
-					<input type="text" name="display_order#<?php echo $value['id'] ?>" id="display_order#<?php echo $value['id'] ?>" value="<?php echo $value['display_order'] ?>" class="fld_ord">
-				</label>
+				<div class="li_caption">
+					<label for="remove#<?php echo $value['id'] ?>">
+						<span>R</span>
+						<input type="checkbox" name="remove#<?php echo $value['id'] ?>" id="remove#<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>">
+					</label>
+					<label for="display_order#<?php echo $value['id'] ?>">
+						<span>Pos</span>
+						<input type="text" name="display_order#<?php echo $value['id'] ?>" id="display_order#<?php echo $value['id'] ?>" value="<?php echo $value['display_order'] ?>" class="fld_ord">
+					</label>
+				</div>
 			</li>
 		<?php endif ?>
 		<?php endforeach ?>
 	</ul>
-	<input type="hidden" name="update" value="go">
-	<div class="dev">&nbsp;</div>
-	<div class="dev br_ts">&nbsp;</div>
-	<label for="btn2" class="sbm" ><input type="submit" id="btn2" class="btn" value="Update"></label>
-	<div class="cl">&nbsp;</div>
+		<input type="hidden" name="update" value="go">
+		<div class="dev">&nbsp;</div>
+		<div class="dev br_ts">&nbsp;</div>
+		<label for="btn2" class="sbm" ><input type="submit" id="btn2" class="btn" value="Update"></label>
+		<div class="cl">&nbsp;</div>
+	
 </form>
 <?php else: ?>
 	<p>There are currently no images associated with this category.</p>

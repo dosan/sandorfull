@@ -207,6 +207,9 @@ class Gallery extends Controller
 				$upload = move_uploaded_file($_FILES['image']['tmp_name'], UPLOAD_PATH.$new_name);
 				if ($upload) {
 					// create thumbnail image
+
+
+				if(function_exists('exec')) {
 					convert_image(
 						UPLOAD_PATH.$new_name,
 						UPLOAD_PATH_THUMB.$new_name,
@@ -221,6 +224,7 @@ class Gallery extends Controller
 						1,
 						LARGE_WIDTH
 					);
+				}
 					$order = $model->getOrder(1, 'display_order', 'images', 'category', $id);
 					$result = $model->insertImage($caption, $new_name, $id, $order);
 					if ($result) {
