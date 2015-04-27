@@ -138,16 +138,16 @@ class Admin extends Controller
 
 			$products_model = $this->model('ProductsModel');
 			$res = $products_model->updateProduct($itemId, $itemName, $itemPrice, $itemStatus, $itemDesc, $itemCat);
-			
+
 			if ($res) {
 				$resData['success'] = 1;
 				$resData['message'] = 'Изменение успещно внесены';
 			}else{
 				$resData['success'] = 0;
-				$resData['success'] = 'Ошибка изменения данных';
+				$resData['message'] = 'Ошибка изменения данных';
 			}
+
 			echo json_encode($resData);
-			return;
 		}else{
 			header('location: '.URL);
 		}

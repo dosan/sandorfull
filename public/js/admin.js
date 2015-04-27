@@ -89,19 +89,18 @@ function updateProduct(item_id){
 	var itemPrice = $('#itemPrice_' + item_id).val();
 	var itemCat = $('#itemCatId_' + item_id).val();
 	var itemDesc = $('#itemDesc_' + item_id).val();
-	var itemStatus = $('#itemStatus_' + item_id).attr('checked');
-	if (! itemStatus) {
-		itemStatus = 1
+
+	if ($('#itemStatus_' + item_id).is(":checked")) {
+		var itemStatus = 0;
 	}else{
-		itemStatus = 0
+		var itemStatus = 1;
 	}
 	var postData = {itemName: itemName, itemPrice: itemPrice, itemDesc: itemDesc,
 					itemId: item_id, itemCat: itemCat, itemStatus: itemStatus};
-
 	$.ajax({
 		type: 'POST',
 		async: false,
-		url: "/admin/updateproduct/",
+		url: "/admin/updateProduct/",
 		data: postData,
 		dataType: 'json',
 		success: function(data){

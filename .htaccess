@@ -10,10 +10,11 @@ RewriteEngine On
 
 # When using the script within a sub-folder, put this path here, like /mysubfolder/
 # If your app is in the root of your web folder, then leave it commented out
-
+AddType image/gif .gif
 # General rewrite rules
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-l
 
+RewriteCond %{REQUEST_URI} !\.(png|gif|jpg)$
 RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]

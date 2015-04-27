@@ -1,26 +1,19 @@
 <?php
-
 class Email{
-
 	private $_smtpHost = SMTP_HOST;
 	private $_smtpAuthentication = SMTP_AUTHENTICATION;
 	private $_smtpPort = SMTP_PORT;
 	private $_smtpUsername = SMTP_USERNAME;
 	private $_smtpPassword = SMTP_PASSWORD;
 	private $_smtpEncrytion = null;
-
 	private $_attachments = array();
-
 	private $_to = array();
 	private $_from = array();
 	private $_replyTo = array();
-
 	private $_subject = null;
 	private $_body = null;
 	public $_error = null;
-
 	public function send($class = 1){
-
 		try {
 			if (!empty($class) && !empty($this->_to) && !empty($this->_from) && !empty($this->_subject)) {
 				switch ($class) {
@@ -46,7 +39,6 @@ class Email{
 		}
 	}
 	
-
 	public function parse($file = null, $data = null){
 		if (!empty($file) && is_file(EMAILS_PATH.$file.'.php')) {
 			ob_start();
@@ -59,22 +51,17 @@ class Email{
 			$this->_subject = $subject;
 		}
 	}
-
 	public function setBody($body = null){
 		if (!empty($body)) {
 			$this->_body = $body;
 		}
 	}
-
-
 	public function setFrom($email = null, $name = null){
 		if (!empty($email)) {
 			$name = !empty($name) ? $name : $email;
 			$this->_from = array('email' => $email, 'name' => $name);
 		}
 	}
-
-
 	public function setTo($email = null, $name = null){
 		$this->_to = array();
 		if (!empty($email)) {
@@ -82,14 +69,12 @@ class Email{
 			$this->_to = array('email' => $email, 'name' => $name);
 		}
 	}
-
 	public function addReplyTo($email = null, $name = null){
 		if (!empty($email)) {
 			$name = !empty($name) ? $name : $email;
 			$this->_replyTo[] = array('email' => $email, 'name' => $name);
 		}
 	}
-
 	public function addAttachment($path = null, $file = null, $name = null){
 		if (!empty($path) && !empty($file) && is_file($path.DS.$file)) {
 			$file = strip_tags($file);
@@ -98,7 +83,6 @@ class Email{
 		}
 		return false;
 	}
-
 	private function phpMailer(){
 		@require_once(LIBS.'PHPMailer'.DS.'class.phpmailer.php');
 		$objMail = new PHPMailer(true);
@@ -135,7 +119,6 @@ class Email{
 			return true;
 		}
 	}
-
 	private function swiftMailer(){
 		require_once('swiftmailer'.DS.'lib'.DS.'swift_required.php');
 		$objTransport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
@@ -148,7 +131,6 @@ class Email{
 		->setTo(array($this->_to['email'] => $this->_to['name']))
 		->setBody($this->_body, 'text/html')
 		->addPart(strip_tags($this->_body), 'text/plain');
-
 		if (!empty($this->_replyTo)) {
 			foreach ($this->_replyTo as $rt) {
 				$objMessage->setReplyTo(array($rt['email'] => $rt['name']));	
@@ -186,10 +168,8 @@ class Email{
 					$mime = Helper::getMimeType($item['file']);
 					$objPart->type = $mime;
 					$objPart->disposition = Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
-
 					$objPart->encoding = Zend\Mime\Mime::ENCODING_BASE64;
 					$objPart->filename = $item['name'];
-
 					$attachmentsParts[] = $objPart;
 				}
 			}else{
@@ -198,15 +178,11 @@ class Email{
 				$name = $this->_attachments[0]['name'];
 			
 				$objPart = new Zend\Mime\Part(file_get_contents($file));
-
 				$mime = Helper::getMimeType($file);
-
 				$objPart->type = $mime;
 				$objPart->disposition = Zend\Mime\Mime::DISPOSITION_ATTACHMENT;
 				$objPart->encoding = Zend\Mime\Mime::ENCODING_BASE64;
-
 				$objPart->filename = $name;
-
 				$attachmentsParts[] = $objPart;
 			}
 		}
@@ -214,7 +190,6 @@ class Email{
 		$bodyParts = new Zend\Mime\Message();
 		$bodyParts->setParts($arrParts);
 		$objMessage->setBody($bodyParts);
-
 		if ($objMessage->isValid()) {
 			$objTransport = new Zend\Mail\Transport\Sendmail();
 			$options = array(
@@ -227,7 +202,6 @@ class Email{
 					'password' => SMTP_PASSWORD,
 				)
 				);
-
 			if (!empty($this->_smtpEncrytion)) {
 				$options['connection_config']['ssl'] = $this->_smtpEncrytion;
 			}

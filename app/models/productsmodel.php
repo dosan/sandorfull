@@ -108,15 +108,16 @@ class ProductsModel  extends MainModel{
 	 */
 	public function updateProduct($itemId, $itemName, $itemPrice, $itemStatus, $itemDesc, $itemCat, $newFileName = null){
 		$set = array();
+
+		$set[] = "`product_status` = '{$itemStatus}'";
+
 		if ($itemName) {
 			$set[] = "`product_name` = '{$itemName}'";
 		}
 		if ($itemPrice > 0) {
 			$set[] = "`product_price` = '{$itemPrice}'";
 		}
-		if ($itemStatus !== null) {
-			$set[] = "`product_status` = '{$itemStatus}'";
-		}
+		
 		if ($itemDesc) {
 			$set[] = "`product_description` = '{$itemDesc}'";
 		}
@@ -130,7 +131,8 @@ class ProductsModel  extends MainModel{
 		$setStr = implode($set, ', ');
 
 		$sql = "UPDATE `products` SET $setStr WHERE `product_id` = '$itemId'";
-		return $this->querySqlWithTryCatch($sql);
+		
+		return $this->db->exec($sql);
 	}
 	public function updateProductImage($itemId, $newFileName){
 		return $this->updateProduct($itemId, null, null, null, null, null, $newFileName);
