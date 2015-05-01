@@ -45,7 +45,7 @@ class Gallery extends Controller
 		}
 		$categories = $model->getCategories();
 		require VIEWS_PATH.'layouts'.DS.'header.php';
-		require VIEWS_PATH.'home'.DS.'categories.php';
+		require VIEWS_PATH.'gallery'.DS.'categories.php';
 		require VIEWS_PATH.'layouts'.DS.'footer.php';
 	}
 	public function edit($id)
@@ -88,7 +88,7 @@ class Gallery extends Controller
 			}
 		}
 		require VIEWS_PATH.'layouts'.DS.'header.php';
-		require VIEWS_PATH.'home'.DS.'categories_edit.php';
+		require VIEWS_PATH.'gallery'.DS.'categories_edit.php';
 		require VIEWS_PATH.'layouts'.DS.'footer.php';
 		
 	}
@@ -121,9 +121,9 @@ class Gallery extends Controller
 	{
 		require VIEWS_PATH.'layouts'.DS.'header.php';
 		if (isset($id)) {
-			require VIEWS_PATH.'home'.DS.'categories_remove.php';
+			require VIEWS_PATH.'gallery'.DS.'categories_remove.php';
 		}else{
-			require_once VIEWS_PATH.'home'.DS.'error.php';
+			require_once VIEWS_PATH.'gallery'.DS.'error.php';
 		}
 		require VIEWS_PATH.'layouts'.DS.'footer.php';
 	}
@@ -237,7 +237,7 @@ class Gallery extends Controller
 		$images = $model->getAllImagesByCategory($id);
 		$hd_script = "<link rel=\"stylesheet\" href=\"".URL."public/js/fancybox/jquery.fancybox.css\" type=\"text/css\">";
 		require VIEWS_PATH.'layouts'.DS.'header.php';
-		require VIEWS_PATH.'home'.DS.'images.php';
+		require VIEWS_PATH.'gallery'.DS.'images.php';
 		require VIEWS_PATH.'layouts'.DS.'footer.php';
 	}
 }

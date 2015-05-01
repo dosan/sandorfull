@@ -17,9 +17,14 @@ class MainModel
 	}
 	
 	function selectAll($table) {
-		$sql = 'SELECT * FROM `'.$table.'`';
-		$this->db->query($sql);
-		return $query;
+		$sql = "SELECT * FROM `".$table."`";
+		$query = $this->db->query($sql);
+		if(! $query) return false;
+		$result = array();
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			$result[] = $row;
+		}
+		return $result;
 	}
 	
 	function select($id) {

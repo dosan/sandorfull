@@ -13,6 +13,7 @@
 		<div class="container">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/">Home</a>
+				<a class="navbar-brand" href="<?php echo URL ?>gallery">Gallery</a>
 				<a class="navbar-brand" href="<?php echo URL ?>post">Posts</a>
 				<a class="navbar-brand" href="<?php echo URL ?>contact">Contact</a>
 				<a class="navbar-brand" href="<?php echo URL ?>product">Web Store</a>
