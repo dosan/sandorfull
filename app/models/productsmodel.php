@@ -73,7 +73,7 @@ class ProductsModel  extends MainModel{
 	public function getProducts()
 	{
 		$sql = "SELECT * 
-				FROM `products`";
+				FROM `products` ORDER BY `product_id` DESC";
 		$query = $this->querySqlWithTryCatch($sql);
 		return $this->getArrayResult($query);
 	}
@@ -86,10 +86,11 @@ class ProductsModel  extends MainModel{
 	 * @param string $itemDesc описание продукта 
 	 * @param integer $itemCat категория продукта 
 	 */
-	public function insertProduct($itemName, $itemPrice, $itemDesc, $itemCat){
+	public function insertProduct($itemName, $name_id, $itemPrice, $itemDesc, $itemCat){
 		$sql = "INSERT INTO `products`
 				SET 
 					`product_name` = '{$itemName}',
+					`name_id` = '{$name_id}',
 					`product_price` = {$itemPrice},
 					`product_description` = '{$itemDesc}',
 					`cat_id` = {$itemCat}";

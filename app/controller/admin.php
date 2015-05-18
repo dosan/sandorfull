@@ -2,7 +2,6 @@
 
 class Admin extends Controller
 {
-
 	public $resultCategories;
 
 	public $resultMainCategories;
@@ -11,19 +10,14 @@ class Admin extends Controller
 
 	public function index()
 	{
-		if (Session::get('user_range') == 'admin') {
-			$this->resultCategories = $this->categories_model->getAllMainCategories();
+		$this->resultCategories = $this->categories_model->getAllMainCategories();
 
-			$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','index.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
-		}else{
-			header('location: '.URL);
-		}
+		$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','index.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
 	}
 	public function addNewCategory(){
-		if (Session::get('user_range') == 'admin') {
 			$cat_name = trim(strip_tags($_POST['newCategoryName']));
 			$cat_parent_id = $_POST['generalCatId'];
 
@@ -37,31 +31,24 @@ class Admin extends Controller
 			}
 			echo json_encode($resultData);
 			return;
-		}else{
-			header('location: '.URL);
-		}
+
 	}
 	/**
 	* Страница управления категориями
 	*/
 	public function category(){
-		if (Session::get('user_range') == 'admin') {
-			$this->resultCategories = $this->categories_model->getAllCategories();
-			$this->resultMainCategories = $this->categories_model->getAllMainCategories();
+		$this->resultCategories = $this->categories_model->getAllCategories();
+		$this->resultMainCategories = $this->categories_model->getAllMainCategories();
 
-			$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','admincategory.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
-		}else{
-			header('location: '.URL);
-		}
+		$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','admincategory.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
 	}
 	/**
 	* Обновление данных категории
 	**/
 	public function updatecategory(){
-		if (Session::get('user_range') == 'admin') {
 			$item_id = intval($_POST['item_id']);
 			$parent_id = intval($_POST['parent_id']);
 			$new_name = trim(strip_tags($_POST['new_name']));
@@ -76,58 +63,50 @@ class Admin extends Controller
 			}
 			echo json_encode($resData);
 			return;
-		}else{
-			header('location: '.URL);
-		}
 	}
 	/**
 	* Страница управления категориями
 	*/
 	public function products(){
-		if (Session::get('user_range') == 'admin') {
 
 			$this->resultCategories = $this->categories_model->getAllCategories();
 			$products_model = $this->model('ProductsModel');
 			$this->resultProducts = $products_model->getProducts();
-
 			$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
 			$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
 			$this->loadViewTemplFolderTemplName('admin','adminproducts.php', 1);
 			$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
-		}else{
-			header('location: '.URL);
-		}
 	}
+	public function getDataFromAngular(){
+		$data = file_get_contents("php://input");
+		return json_decode($data);
+	} 
+
 	/**
 	* Добавление нового товара
 	**/
 	public function addProduct(){
-		if (Session::get('user_range') == 'admin') {
-
-			$itemName = trim(strip_tags($_POST['itemName']));
-			$itemPrice = intval($_POST['itemPrice']);
-			$itemDesc = trim($_POST['itemDesc']);
-			$itemCat = intval($_POST['itemCat']);
-
-			$products_model = $this->model('ProductsModel');
-			$res = $products_model->insertProduct($itemName, $itemPrice, $itemDesc, $itemCat);
-			
+		$resData = array();
+		$productData = $this->getDataFromAngular();
+		
+		$products_model = $this->model('ProductsModel');
+		
+		if($products_model->getDuplicate(1, 'product_name', 'products', 'product_name', $productData->name)){
+			$resData['success'] = 0;
+			$resData['message'] = 'Такой товар уже существует';
+		}else{
+			$res = $products_model->insertProduct($productData->name, get_in_translate_to_en($productData->name), $productData->price, $productData->description, (int)$productData->category);
 			if ($res) {
 				$resData['success'] = 1;
 				$resData['message'] = 'Товар успешно добавлен!';
 			}else{
 				$resData['success'] = 0;
-				$resData['success'] = 'Ошибка изменения данных';
+				$resData['message'] = 'Ошибка изменения данных';
 			}
-			echo json_encode($resData);
-			return;
-		}else{
-			header('location: '.URL);
 		}
+		echo json_encode($resData);
 	}
 	public function updateProduct(){
-		if (Session::get('user_range') == 'admin') {
-
 			$itemId      = $_POST['itemId'];
 			$itemName    = $_POST['itemName'];
 			$itemPrice   = $_POST['itemPrice'];
@@ -148,14 +127,10 @@ class Admin extends Controller
 			}
 
 			echo json_encode($resData);
-		}else{
-			header('location: '.URL);
-		}
+
 	}
 
 	public function upload(){
-		if (Session::get('user_range') == 'admin') {
-
 			$maxSize = 2 * 1024 * 1024;
 
 			$itemId     = $_POST['itemId'];
@@ -182,30 +157,22 @@ class Admin extends Controller
 			}else{
 				echo ('Ошибка загрузки файла');
 			}
-		}else{
-			header('location: '.URL);
-		}
+
 	}
 
 	/**
 	* Страница управления Заказами
 	*/
 	public function orders(){
-		if (Session::get('user_range') == 'admin') {
-			$order_model = $this->model('OrdersModel');
-			$this->resultOrders = $order_model->getOrders();
-			$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminorders.php', 1);
-			$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
-		}else{
-			header('location: '.URL);
-		}
+		$order_model = $this->model('OrdersModel');
+		$this->resultOrders = $order_model->getOrders();
+		$this->loadViewTemplFolderTemplName('admin','adminheader.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminsidebar.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminorders.php', 1);
+		$this->loadViewTemplFolderTemplName('admin','adminfooter.php', 1);
 	}
 
 	public function setOrderStatus(){
-		if (Session::get('user_range') == 'admin') {
-
 			$itemId = intval($_POST['itemId']);
 			$status = intval($_POST['status']);
 
@@ -219,13 +186,9 @@ class Admin extends Controller
 			}
 			echo json_encode($resData);
 			return;
-		}else{
-			header('location: '.URL);
-		}
+
 	}
 	public function setOrderDatePayment(){
-		if (Session::get('user_range') == 'admin') {
-
 			$itemId = intval($_POST['itemId']);
 			$datePayment = $_POST['datePayment'] ? $_POST['datePayment'] : null;
 
@@ -239,8 +202,6 @@ class Admin extends Controller
 			}
 			echo json_encode($resData);
 			return;
-		}else{
-			header('location: '.URL);
-		}
+
 	}
 }//endclass

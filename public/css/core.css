@@ -25,9 +25,7 @@ body {
 	white-space: nowrap;
 }
 
-.thumbnail img {
-	width: 100%;
-}
+
 
 .ratings {
 	padding-right: 10px;
@@ -53,13 +51,8 @@ table{
 	font-family: sans-serif;
 	font-size: 16px;
 }
-th{
-	border-top: dashed 1px #D5D5FF;
-}
 td, th {
 	padding: 5px;
-	border-top: 1px dashed #D5D5FF;
-	border-bottom: 1px dashed #D5D5FF;
 }
 tr:nth-child(2n + 0) td{
 	background-color: #F4F4FF;

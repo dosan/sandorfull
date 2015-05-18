@@ -1,8 +1,8 @@
 <div class="col-md-9">
-	<div class="jumbotron">
+
 	<h1><?php echo $this->product['product_name'] ?> </h1>
 	<p class="lead">
-	<img width="500" src="<?php echo URL."public/img/products/".$this->product['product_image'] ?>"/>
+	<img width="500" ng-src="<?php echo URL."public/img/products/".$this->product['product_image'] ?>" on-error-src="public/no-image.jpg" />
 	</p>
 	Price: <?php echo $this->product['product_price'] ?>
 <p>
@@ -21,5 +21,5 @@
 </p>
 
 	<p><h2>Description</h2> <br> <?php echo $this->product['product_description'] ?></p>
-	</div>
+
 </div>

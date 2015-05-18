@@ -12,13 +12,11 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="/">Home</a>
+				<a class="navbar-brand" href="/">Web Store</a>
+				<a class="navbar-brand" href="<?php echo URL ?>gallery">Gallery</a>
 				<a class="navbar-brand" href="<?php echo URL ?>post">Posts</a>
 				<a class="navbar-brand" href="<?php echo URL ?>contact">Contact</a>
-				<a class="navbar-brand" href="<?php echo URL ?>product">Web Store</a>
-				<?php if (Session::get('user_range') == 'admin'): ?>
-					<a class="navbar-brand" href="<?php echo URL ?>admin">Admin</a>
-				<?php endif ?>
+				<a class="navbar-brand" href="<?php echo URL ?>admin">Admin</a>
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
@@ -33,6 +31,6 @@
 			</div>
 		</div>
 	</nav>
-	<div class="container">
+	<div class="container" ng-app="adminApp" ng-controller="AdminCtrl">
 	<div class="err"></div>
 	<div class="row">

@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css">
 </head>
 <body ng-controller="PhoneListCtrl">
-	 <nav class="navbar navbar-fixed-top navbar-inverse">
+	<nav class="navbar navbar-fixed-top navbar-inverse">
 		<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -26,15 +26,14 @@
 			</ul>
 		</div><!-- /.nav-collapse -->
 		</div><!-- /.container -->
-	 </nav><!-- /.navbar -->
+	</nav><!-- /.navbar -->
 
-	 <div class="container view-container">
-  		<div ng-view class="view-frame"></div>
+	<div class="container view-container">
+		<div ng-view class="view-frame"></div>
 		<footer>
-		  <p>&copy; Company 2014</p>
+			<p>&copy; Company 2014</p>
 		</footer>
-
-	 </div><!--/.container-->
+	</div><!--/.container-->
 <!-- Angular.js core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->

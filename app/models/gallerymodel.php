@@ -67,7 +67,6 @@ class GalleryModel{
 			return true;
 		}
 		return false;
-			
 	}
 	public function getAllImagesByCategory($id){
 		$sql = "SELECT * FROM images WHERE category = {$id} ORDER BY display_order ASC";

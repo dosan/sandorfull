@@ -4,12 +4,17 @@ class Phones extends Controller
 {
 	public function index()
 	{
-		require VIEWS_PATH.'home'.DS.'index.php';
+		require 'templates/layout.php';
 	}
 
 	public function getphones(){
 		$ngPhones = $this->model('HomeModel');
-		$data = $ngPhones->selectAll('ng-phones');
+		$data = $ngPhones->selectAll('products');
+		echo json_encode($data);
+	}
+	public function get($phoneId){
+		$ngPhones = $this->model('HomeModel');
+		$data = $ngPhones->selectPhone($phoneId);
 		echo json_encode($data);
 	}
 }

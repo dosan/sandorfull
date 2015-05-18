@@ -3,7 +3,7 @@
 class App{
 	// home page user
 	
-	private $controller = 'phones';
+	private $controller = 'product';
 	
 	// main action 	
 	private $method = 'index';

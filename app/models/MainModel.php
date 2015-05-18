@@ -85,4 +85,20 @@ class MainModel
 		}
 	return false;
 	}
+	
+	public function getDuplicate($case, $select, $from, $where, $equals, $and="", $equals2=""){
+		switch ($case) {
+			case 1:
+				$sql = "SELECT {$select} FROM {$from} WHERE {$where} = '{$equals}'";
+				break;
+			case 2:
+				$sql = "SELECT {$select} FROM {$from} WHERE {$where} = '{$equals}' AND {$and} != '{$equals2}'";
+				break;
+		}
+		$res = $this->db->query($sql);
+		if($res->rowCount() > 0){
+			return true;
+		}
+		return false;
+	}
 }

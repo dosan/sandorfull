@@ -6,7 +6,7 @@
 					<div class="col-sm-4 col-lg-4 col-md-4">
 						<div class="thumbnail">
 						<a href="<?php echo URL."product/".$item['product_id']; ?>/">
-							<img style="width:320px; height:150px;" src="<?php echo URL."public/img/products/".$item['product_image'] ?>" alt="Product">
+							<img style="max-height: 150px; height: 150px;" src="<?php echo URL."public/img/products/".$item['product_image'] ?>" alt="Product">
 						</a>
 							<div class="caption">
 								<h4 class="pull-right"><?php echo $item['product_price'] ?>tg</h4>
